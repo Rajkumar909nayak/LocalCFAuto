@@ -35,7 +35,7 @@ export class LoginPage {
     this.clearfeedScreen = page.locator('//a//span[text()="Inbox"]');
   }
 
-  /**Method to navigate application page */
+  /**Method to navigate application page. */
   async navigateToURL(): Promise<void> {
     await this.page.goto('/');
   }
