@@ -1,0 +1,24 @@
+// .eslintignore
+
+# Playwright Specific
+node_modules/
+test-results/
+allure-results/
+html-report/
+logs/
+.dockerignore
+.gitignore
+
+summary.json
+
+# IDE - VSCode
+.vscode/*
+.github/*
+
+# System Files
+.DS_Store
+Thumbs.db
+{"mode":"full","isActive":false}
+
+# Docs files
+*_spec3.json
