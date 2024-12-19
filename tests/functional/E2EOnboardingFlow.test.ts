@@ -66,6 +66,28 @@ test.describe('ClearFeed Onboarding E2E Tests', () => {
           testData.requestChannelInSettingAsCustomer,
         );
       });
+      // await test.step('Creation of CF ticket from slack through Automatic ticketing', async () => {
+      //   await onboardingPage.verifyTicketSectionConfiguration(CFPage, 10);
+      //   await onboardingPage.navigateBack(CFPage);
+      //   await newWorkspacePage.enterMessageInCreatedRequestChannel();
+      //   await newWorkspacePage.verifyCommentsFromWebAppToSlack();
+      //   await newWorkspacePage.againNavigateToCF();
+      //   await onboardingPage.verifyCommentsFromSlckToWebApp(CFPage);
+      //   // await onboardingPage.verifyTicketSectionConfiguration(CFPage, 1);
+      //   // await onboardingPage.navigateBack(CFPage);
+      //   // await newWorkspacePage.enterMessageInCreatedRequestChannel();
+      //   // await newWorkspacePage.createTicketThroughEmoji();
+      //   // await newWorkspacePage.againNavigateToCF();
+      //   // await onboardingPage.verifyCommentsFromSlckToWebApp(CFPage);
+      // });
+      // await test.step('Creation of CF ticket from slack through Emoji', async () => {
+      //   await onboardingPage.verifyTicketSectionConfiguration(CFPage, 9);
+      //   await onboardingPage.navigateBack(CFPage);
+      //   await newWorkspacePage.enterMessageInCreatedRequestChannel();
+      //   await newWorkspacePage.createTicketThroughEmoji();
+      //   await newWorkspacePage.againNavigateToCF();
+      //   await onboardingPage.verifyCommentsFromSlckToWebApp(CFPage);
+      // });
     },
   );
 

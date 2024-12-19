@@ -1,9 +1,9 @@
 {
-  "userEmail": "4763ae04-96ae-4e25-ad32-1c242db9082a@mailslurp.biz",
+  "userEmail": "raj@igsteam704160.testinator.com",
   "slackURL": "https://clearfeedui-igs.slack.com",
   "existingUserEmail": "testcf620@gmail.com",
-  "password": "U2FsdGVkX1907TXVYNea6tWNCN4QEiP61R65QVEq/TQ",
-  "sandBoxPassword": "U2FsdGVkX1/GsEZMo8vdrobx6xb+zzibcs9oIKu+6So=",
+  "password": "U2FsdGVkX1907TXVYNea6tWNCN4QEiP61R65QVEq/TQ=",
+  "sandBoxPassword": "U2FsdGVkX1+NX08x+YtPJKeYs1eFHfi8ndf2f2iAIoA=",
   "existingUserPassword": "U2FsdGVkX1/1CbE/r498+6kCuDKLtenoP3JIuyUHZ1w=",
   "phone": "7676767676",
   "token": "U2FsdGVkX18XZNoXPUdSkzvJHW/QPdnz+rZQSDA5Sw3178dz+9AmP8uMkgblrpLGHAzoqxXf1hogl9B+BqmurdK82Qdo9bBIvQ1KW6NkMmEv5lEcBTyFf7pf7LzSzNikShuYnvcfNN5URLZWuj7QSBK/wx5HcvIqMboVInk0PdmHro5Oc9lx52hpSN7nimHXWw5XiUV1ecB/qQKm9XOir/wBKb91R1gBVnXI3ukMDTRKACo/6ih9Wwa/4vxpxqERE5HWe+nPoliacJpMXfmJHTjRBEvHa24QCrZ7hgaFC5U=",
@@ -28,7 +28,7 @@
   ],
   "requestDescription": "Test",
   "addInvite": "ishita@clearfeed.ai",
-  "apiKey": "c9fbc7a822482cece87408d16b8cc219a0e046903be6d924eca87be9866a999e",
+  "apiKey": "c555e144e224f1063f26a5c5e0649b3ff6f3abb5c652e0bb91ae8fd9e8549e46",
   "customerSupport": "Customer Support",
   "employeeSupport": "Employee Support",
   "countryCode": "india",
@@ -38,5 +38,7 @@
   "requestChannelInSettingAsEmployee": 1,
   "requestChannelImage": 2,
   "secureFromDayOneImageForAccountSetUpPage": 2,
-  "secureFromDayOneImageForAuthorizeSlacPage": 1
+  "secureFromDayOneImageForAuthorizeSlacPage": 1,
+  "inboxName": "raj",
+  "tokenKey": "3f6682d8fa374934bc1e9709d8feac03"
 }

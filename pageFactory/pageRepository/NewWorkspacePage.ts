@@ -3,6 +3,7 @@ import { Page, BrowserContext, Locator, expect } from '@playwright/test';
 import { WebActions } from '@lib/WebActions';
 
 import qaTestData from '../../Environment_variables/staging/onBoardingTestData.json';
+import { requestChannelName } from './OnboardingPage';
 
 let webActions: WebActions;
 const testData = qaTestData;
@@ -69,7 +70,7 @@ export class NewWorkspacePage {
   async loginToSlack() {
     await this.page.goto(testData.slackURL);
     await this.page.waitForLoadState();
-    await webActions.createMailslurpInbox();
+    // await webActions.createMailslurpInbox();
     await expect(this.page).toHaveTitle('Sign in to CF-Sandbox | Slack');
     await this.page
       .locator('//*[contains(text(),"Enter email and password")]')
@@ -82,7 +83,7 @@ export class NewWorkspacePage {
       await webActions.decipherPassword(testData.sandBoxPassword),
     );
     await this.signinButton.click();
-    //wait command is used to load the workspace directory page.
+    //The wait command is used to ensure that the workspace directory page is fully loaded before proceeding with further actions
     await this.page.waitForTimeout(5000);
     await this.enterOTP();
 
@@ -91,6 +92,49 @@ export class NewWorkspacePage {
       await this.page.waitForLoadState();
       await this.againNavigateToSlack();
     }
+  }
+
+  /**
+   * Method to enter message in created request channel
+   */
+  async enterMessageInCreatedRequestChannel() {
+    await this.page
+      .locator(`(//span[contains(text(),"${requestChannelName}")])[1]`)
+      .scrollIntoViewIfNeeded();
+    await this.page
+      .locator(`(//span[contains(text(),"${requestChannelName}")])[1]`)
+      .click();
+    await (
+      await this.page.$('//div[@class="ql-editor ql-blank"]//p')
+    ).fill('test1');
+    await (await this.page.$('//button[@aria-label="Send now"]')).click();
+  }
+
+  /**
+   * Method to write a comments in slack
+   */
+  async verifyCommentsFromWebAppToSlack() {
+    await this.page.locator('//div[@data-qa="reply_bar"]').last().click();
+    await this.page.locator('(//div[@class="ql-editor ql-blank"]//p)[2]').fill('Thank you');
+    await this.page.locator('(//button[@data-qa="texty_send_button"])[2]').click();
+    await this.page.locator('//button[@data-qa="close_flexpane"]').click();
+    // await this.page.waitForTimeout(3000);
+  }
+
+  /**
+   * Method to create a ticket through emoji
+   */
+  async createTicketThroughEmoji() {
+    if (await this.page.locator('//span[contains(text(),"Dismiss")]').isVisible()) {
+      await this.page.locator('//span[contains(text(),"Dismiss")]').click();
+    }
+    await this.page
+      .locator('//div[@class="p-rich_text_block"]//div')
+      .last()
+      .hover();
+    await this.page.locator('//button[@data-qa="add_reaction"]').click();
+    await this.page.locator('//input[@class="c-input_text p-emoji_picker__input"]').fill('ticket');
+    await this.page.locator('//button[@id="emoji-picker-ticket"]//img').click();
   }
 
   /**

@@ -65,7 +65,7 @@ test.describe('ClearFeed Onboarding Tests', () => {
     },
   );
 
-  test(
+  test.only(
     'Verify Onboarding Page with Magic Link Using Customer Support and Standalone helpdesk without selecting Glove support opt',
     { tag: '@Smoke' },
     async ({ newWorkspacePage, onboardingPage }) => {

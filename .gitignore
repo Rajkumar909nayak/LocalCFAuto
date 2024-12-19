@@ -4,5 +4,5 @@ allure-results/
 allure-report/
 html-report/
 logs/
-OrtoniHtmlReport/
-package-lock.json/
+OrtoniHtmlReport
+package-lock.json

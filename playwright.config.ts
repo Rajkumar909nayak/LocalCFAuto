@@ -60,7 +60,7 @@ const config: PlaywrightTestConfig = {
         headless: false,
 
         //Browser height and width
-        viewport: { width: 1280, height: 600 },
+        viewport: { width: 1280, height: 720 },
         ignoreHTTPSErrors: true,
 
         //Enable File Downloads in Chrome
@@ -83,7 +83,7 @@ const config: PlaywrightTestConfig = {
         browserName: 'chromium',
         baseURL: testConfig[ENV],
         headless: false,
-        viewport: { width: 1280, height: 800 },
+        viewport: { width: 1280, height: 720 },
         ignoreHTTPSErrors: true,
         acceptDownloads: true,
         screenshot: 'only-on-failure',
@@ -101,7 +101,7 @@ const config: PlaywrightTestConfig = {
         browserName: 'firefox',
         baseURL: testConfig[ENV],
         headless: true,
-        viewport: { width: 1280, height: 800 },
+        viewport: { width: 1280, height: 720 },
         ignoreHTTPSErrors: true,
         acceptDownloads: true,
         screenshot: 'only-on-failure',
@@ -120,7 +120,7 @@ const config: PlaywrightTestConfig = {
         channel: 'msedge',
         baseURL: testConfig[ENV],
         headless: false,
-        viewport: { width: 1280, height: 600 },
+        viewport: { width: 1280, height: 720 },
         ignoreHTTPSErrors: true,
         acceptDownloads: true,
         screenshot: 'only-on-failure',
@@ -137,7 +137,7 @@ const config: PlaywrightTestConfig = {
         browserName: 'webkit',
         baseURL: testConfig[ENV],
         headless: true,
-        viewport: { width: 1280, height: 800 },
+        viewport: { width: 1280, height: 720 },
         ignoreHTTPSErrors: true,
         acceptDownloads: true,
         screenshot: 'only-on-failure',
