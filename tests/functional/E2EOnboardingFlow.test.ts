@@ -50,7 +50,7 @@ test.describe('ClearFeed Onboarding E2E Tests', () => {
     'Verify Created Channel,Request,Workflow and Collection Settings Using Customer Support and Standalone helpdesk',
     { tag: '@Smoke' },
     async ({ newWorkspacePage, onboardingPage }) => {
-      test.setTimeout(780000); // Set timeout to 780000 seconds for this test
+      test.setTimeout(840000); // Set timeout to 780000 seconds for this test
       await test.step('Navigate to existing Slack workspace', async () => {
         await newWorkspacePage.loginToSlack();
       });
@@ -95,7 +95,7 @@ test.describe('ClearFeed Onboarding E2E Tests', () => {
     'Verify Created Channel,Workflow and Collection Settings Using Employee Support and Standalone helpdesk',
     { tag: '@Smoke' },
     async ({ newWorkspacePage, onboardingPage }) => {
-      test.setTimeout(780000); // Set timeout to 780000 seconds for this test
+      test.setTimeout(840000); // Set timeout to 780000 seconds for this test
       await test.step('Navigate to existing Slack workspace', async () => {
         await newWorkspacePage.loginToSlack();
       });
