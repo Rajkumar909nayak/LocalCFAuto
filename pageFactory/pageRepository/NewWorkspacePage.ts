@@ -53,7 +53,8 @@ export class NewWorkspacePage {
    */
   async enterOTP() {
     if (await this.slackRecognizeTitle.isVisible({ timeout: 5000 })) {
-      const OTP = await webActions.extractOTP();
+      await webActions.fechMessageId();
+      const OTP = await webActions.fetchOTP();
       await this.page.waitForSelector('input[aria-label="digit 1 of 6"]');
       for (let i = 0; i < OTP.length; i++) {
         await this.page

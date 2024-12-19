@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Playwright HTML report by LetCode Koushik - V2.0.2">
+    <title>Playwright Framework with Typescript</title>
+    <link rel="icon" href="node_modules/ortoni-report/dist/icon/32.png" type="image/x-icon">
+    <link rel="stylesheet" href="node_modules/ortoni-report/dist/css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+</head>
+<style>
+        #summary, #testDetails, button#back-to-summary {
+            transition: opacity 0.2s ease-in-out;
+        }
+
+        .filter.active {
+            box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+            font-weight: bold;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--bulma-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        div#testDetails {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .sidebar {
+            overflow-y: auto;
+            max-height: calc(100vh - 100px);
+        }
+
+        aside li {
+            cursor: pointer;
+        }
+        details summary {
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        details summary::after {
+            content: '';
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='rgb(136, 145, 164)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            transform:rotate(-90deg);
+            background-size: 1em;
+            background-repeat: no-repeat;
+            background-position:right-center;
+            width: 1em;
+            height: 1em;
+            transition: transform 0.2s ease-in-out;
+        }
+        details[open] > summary::after {
+            transform: rotate(0deg);
+        }
+        .logoimage{
+            max-width: 100px;
+        }
+        .listselected {
+            border-image: linear-gradient(45deg, var(--bulma-primary),#FF6B6B) 1;
+            font-weight: bold;
+        }
+        .has-background-flaky {
+            background-color: #ffb70f !important;
+        }
+        .has-background-retry {
+            background-color: #69748c !important;
+        }
+
+</style>
+<body>
+    <section class="section">
+        <header class="container">
+            <div class="columns is-vcentered">
+                <div class="column is-two-fifths">
+                    <div class="columns is-desktop is-vcentered is-multiline">
+                        <div class="column"><span class="title">Playwright Framework with Typescript</span></div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="control">
+                        <input class="input" name="search" type="search" placeholder="Search by test title" />
+                    </div>
+                     <div class="control has-text-info">
+                        <span id="selected-filters"></span>
+                    </div>
+                </div>
+                <div class="column is-1">
+                    <div class="control">
+                        <button id="toggle-theme" data-theme-status="dark" class="button">Theme</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </section>
+    <section class="section">
+        <main class="container">
+            <div class="columns">
+                <aside class="column is-two-fifths">
+                    <div class="columns is-mobile is-vcentered">
+                        <div class="column">
+                            <h2 class="title is-4">Tests</h2>
+                        </div>
+                        <div class="column">
+                            <div id="project-filter" class="dropdown is-right is-hoverable is-pulled-right">
+                                <div class="dropdown-trigger">
+                                    <button class="button" aria-haspopup="true" aria-controls="select-filter">
+                                    <span>Filters</span>
+                                    <span class="icon is-small">
+                                        <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                    </span>
+                                    </button>
+                                </div>
+                                <div class="dropdown-menu" id="select-filter" role="menu">
+                                    <div class="dropdown-content">
+                                        <div class="dropdown-item">
+                                            <label class="checkbox">
+                                                <input type="checkbox" data-filter-type="project" value="Chrome">Chrome
+                                            </label>
+                                        </div>
+                                        <hr class="dropdown-divider" />
+                                    </div>
+                                </div>
+                            </div>                                
+                        </div>
+                    </div>
+                    <div class="content sidebar">
+                        <details class="box">
+                            <summary class="is-size-5 has-icon-right">
+                                <div class="icon-text">
+                                    <span class="icon has-text-info">
+                                    <img class="image is-16x16" src="node_modules/ortoni-report/dist/icon/file.png" alt="file name">
+                                    </span>
+                                    <span>Onboarding.test.ts</span>
+                                </div>
+                            </summary>
+                            <ul class="mt-4 mb-4">
+                                <details class="mt-2 mb-2">
+                                    <summary class="is-size-5 is-capitalized">
+                                        <div class="icon-text">
+                                            <span class="icon has-text-info">
+                                            <img class="image is-16x16" src="node_modules/ortoni-report/dist/icon/test.png" alt="test name">
+                                            </span>
+                                            <span>ClearFeed Onboarding Tests</span>
+                                        </div>
+                                    </summary>
+                                    <ul class="mt-4 mb-4">
+                                        <details class="mt-2 mb-2">
+                                            <summary class="is-capitalized is-size-6">Chrome</summary>
+                                            <ul class="mt-4 mb-4">
+                                                <li class="media " data-suite-name="ClearFeed Onboarding Tests"
+                                                    data-test-duration="07s:501ms" data-test-tags="" 
+                                                    data-project-name="Chrome" data-test-id="0"
+                                                    data-test-status="interrupted ">
+                                                    <div class="icon-text">
+                                                        <span>Verify Onboarding Page with Magic Link Using Employee Support and Standalone helpdesk without selecting Glove support opt</span>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </details>
+                                    </ul>
+                                </details>
+                            </ul>
+                        </details>
+                    </div>
+                </aside>
+                <section class="column is-three-fifths">
+                    <div id="summary">
+                        <div class="columns is-multiline">
+                            <div class="column is-one-third">
+                                <div class="card is-clickable has-background-primary filter" data-status="all">
+                                    <header class="card-header has-text-centered">
+                                        <p class="card-header-title has-text-white">All Tests</p>
+                                        <button class="card-header-icon" aria-label="more options">
+                                            <span class="icon">
+                                                <img aria-hidden="true" class="image is-16x16" src="node_modules/ortoni-report/dist/icon/test.png" alt="test name">
+                                            </span>
+                                        </button>
+                                        </header>
+                                        <div class="card-content">
+                                            <div class="content">
+                                            <p class="has-text-centered has-text-white">1</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column is-one-third">
+                                <div class="card is-clickable has-background-success filter" data-status="passed">
+                                    <header class="card-header has-text-centered">
+                                        <p class="card-header-title has-text-white">Passed</p>
+                                        <button class="card-header-icon" aria-label="more options">
+                                            <span class="icon">
+                                                <img aria-hidden="true" class="image is-16x16" src="node_modules/ortoni-report/dist/icon/pass.png" alt="test name">
+                                            </span>
+                                        </button>
+                                        </header>
+                                        <div class="card-content">
+                                            <div class="content">
+                                            <p class="has-text-centered has-text-white">0</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column is-one-third">
+                                <div class="card is-clickable has-background-danger filter" data-status="failed">
+                                    <header class="card-header">
+                                        <p class="card-header-title has-text-white has-text-centered">Failed</p>
+                                        <button class="card-header-icon" aria-label="more options">
+                                            <span class="icon">
+                                                <img aria-hidden="true" class="image is-16x16" src="node_modules/ortoni-report/dist/icon/fail.png" alt="test name">
+                                            </span>
+                                        </button>
+                                        </header>
+                                        <div class="card-content">
+                                            <div class="content">
+                                            <p class="has-text-centered has-text-white">0</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="columns is-multiline">
+                            <div class="column is-one-third">
+                                <div class="card is-clickable has-background-info filter" data-status="skipped">
+                                    <header class="card-header has-text-centered">
+                                        <p class="card-header-title has-text-white">Skipped</p>
+                                        </header>
+                                        <div class="card-content">
+                                            <div class="content">
+                                            <p class="has-text-centered has-text-white">0</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column is-one-third">
+                                <div class="card is-clickable has-background-warning filter" data-status="flaky">
+                                    <header class="card-header has-text-centered">
+                                        <p class="card-header-title has-text-white">Flaky</p>
+                                        </header>
+                                        <div class="card-content">
+                                            <div class="content">
+                                            <p class="has-text-centered has-text-white">0</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column is-one-third">
+                                <div class="card is-clickable has-background-retry filter" data-status="retry">
+                                    <header class="card-header has-text-centered">
+                                        <p class="card-header-title has-text-white">Retry</p>
+                                        </header>
+                                        <div class="card-content">
+                                            <div class="content">
+                                            <p class="has-text-centered has-text-white">0</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box">
+                            <header class="has-text-centered title is-4">Suite</header>
+                            <div class="columns">
+                                <div class="column is-half">
+                                    <h4>Author: IGS Report</h4>
+                                    
+                                    <h4>Duration: 09s:670ms</h4>
+                                    <h4>Success Rate: 0.00 %</h4>
+                                    <h4>Last Run: 19-Dec-2024 3:24:47 pm</h4>
+                                </div>
+                                <div class="column is-half">
+                                    <div class="chart-container">
+                                        <canvas id="testChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="testDetails" style="display: none;">
+                        <!-- Back button should be outside the dynamic content -->
+                        <button class="button content" id="back-to-summary"onclick="showSummary()">Back to Summary</button>
+                        <!-- Test Details will be displayed here -->
+                    </div>
+                </section>
+            </div>
+        </main>
+    </section>
+    <script src="node_modules/ortoni-report/dist/utils/chart.js"></script>
+    <script>
+        function escapeHtml(unsafe) {
+            return unsafe.replace(/[&<"']/g, function (match) {
+                const escapeMap = {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+                };
+                return escapeMap[match];
+            });
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const testData = [
+  {
+    "suiteTags": [],
+    "testTags": [],
+    "location": "Onboarding.test.ts:97:8",
+    "retry": "",
+    "isRetry": 0,
+    "projectName": "Chrome",
+    "suite": "ClearFeed Onboarding Tests",
+    "title": "Verify Onboarding Page with Magic Link Using Employee Support and Standalone helpdesk without selecting Glove support opt",
+    "status": "interrupted",
+    "flaky": "skipped",
+    "duration": "07s:501ms",
+    "errors": [],
+    "steps": [
+      {
+        "snippet": "",
+        "title": "Before Hooks",
+        "location": ""
+      },
+      {
+        "snippet": "",
+        "title": "Navigate to existing Slack workspace",
+        "location": ""
+      },
+      {
+        "snippet": "",
+        "title": "Navigate to ClearFeed application Using Magic link",
+        "location": ""
+      },
+      {
+        "snippet": "",
+        "title": "After Hooks",
+        "location": ""
+      },
+      {
+        "snippet": "",
+        "title": "Worker Cleanup",
+        "location": ""
+      },
+      {
+        "snippet": "",
+        "title": "attach \"trace\"",
+        "location": ""
+      }
+    ],
+    "logs": "Message ID raj-1734600729-12691548903\n\nSubject Your Slack security code is 224764\n\notp 224764\n\nAccount ID: null\n\nNo accountId found, skipping user deletion.\n",
+    "filePath": "Onboarding.test.ts",
+    "filters": {},
+    "base64Image": true,
+    "screenshotPath": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABQAAAALQCAIAAABAH0oBAAAAAXNSR0IArs4c6QAAEKVJREFUeJzt18ENwCAQwLDS/Xc+tgCJ2BPkmzUzHwAAALzuvx0AAAAAJxhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkLABSHUIneV3LDEAAAAASUVORK5CYII=",
+    "tracePath": "C:\\ClearFeed\\18-12-2024\\test-results\\tests-functional-Onboardin-c8005-selecting-Glove-support-opt-Chrome\\trace.zip",
+    "videoPath": "C:\\ClearFeed\\18-12-2024\\test-results\\tests-functional-Onboardin-c8005-selecting-Glove-support-opt-Chrome\\video-1.webm"
+  }
+];
+            const testDetails = document.getElementById('testDetails');
+            const summary = document.getElementById('summary');
+            const backButton = document.querySelector('button#back-to-summary');
+
+            const themeButton = document.getElementById("toggle-theme");
+            const preferredTheme = themeButton.getAttribute("data-theme-status");
+            const htmlElement = document.documentElement;
+
+            if (preferredTheme === 'dark') {
+                htmlElement.setAttribute('data-theme', 'dark');
+                themeButton.classList.add('is-dark');
+                themeButton.textContent = 'Dark';
+            } else if (preferredTheme === 'light') {
+                htmlElement.setAttribute('data-theme', 'light');
+                themeButton.classList.add('is-light');
+                themeButton.textContent = 'Light';
+            }
+
+            themeButton.addEventListener('click', () => {
+                const currentTheme = htmlElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                htmlElement.setAttribute('data-theme', newTheme);
+                if (newTheme === 'dark') {
+                    themeButton.classList.remove('is-light');
+                    themeButton.classList.add('is-dark');
+                    themeButton.textContent = 'Dark';
+                } else {
+                    themeButton.classList.remove('is-dark');
+                    themeButton.classList.add('is-light');
+                    themeButton.textContent = 'Light';
+                }
+            });
+
+            function showSummary() {
+                summary.style.display = 'block';
+                testDetails.style.display = 'none';
+                backButton.style.display = 'none';
+            }
+            window.showSummary = showSummary;
+            function displayTestDetails(test) {
+                const summary = document.getElementById('summary');
+                const testDetails = document.getElementById('testDetails');
+                const backButton = document.querySelector('button#back-to-summary');
+                summary.style.display = 'none';
+                testDetails.style.opacity = '0';
+                testDetails.style.display = 'block';
+                setTimeout(() => {
+                    testDetails.style.opacity = '1';
+                    backButton.style.opacity = '1';
+                }, 50);
+
+                let statusClass = '';
+                let statusText = test.status.toUpperCase();
+                if (test.status.startsWith('passed')) {
+                    statusClass = 'tag is-success';
+                } else if (test.status === 'flaky') {
+                    statusClass = 'tag is-warning';
+                } else if (test.status === 'failed') {
+                    statusClass = 'tag is-danger';
+                } else {
+                    statusClass = 'tag is-info';
+                }
+
+                testDetails.innerHTML = `
+                    <button class="button content" id="back-to-summary" style="display: block" onclick="showSummary()">Back to Summary</button>
+                    <div class="content has-text-centered">
+                        <p class="title">${test.title}</p>
+                        <p class="subtitle" id="filepath">${test.location}</p>
+                    </div>
+                    <div class="columns">
+                        <div class="column content">
+                            <h4 class="title is-4">Status</h4>
+                            <p class="${statusClass}">${statusText}</p>
+                            ${test.duration.length > 0 ? `
+                            <h4 class="title is-4">Duration</h4>
+                            <p class="${statusClass}">${test.duration}</p>` : ""}
+                            ${test.projectName.length > 0 ? `
+                            <div class="control">
+                                <div class="tags has-addons">
+                                <span class="tag is-dark">Project</span>
+                                <span class="tag is-info is-capitalized">${test.projectName}</span>
+                                </div>
+                            </div>`: ""}
+                            ${test.testTags.length > 0 ? `
+                            <div class="control mt-4">
+                                <div class="tags has-addons">
+                                <span class="tag is-dark">Test Tags</span>
+                                <span class="tag is-info">${test.testTags.join(" ")}</span>
+                                </div>
+                            </div>`: ""}
+                            ${test.videoPath ? `
+                            <div id="testVideo" class="modal">
+                                <div class="modal-background"></div>
+                                    <div class="modal-content">
+                                        <figure>
+                                            <video controls>
+                                                <source src="file://${test.videoPath}" type="video/webm">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        </figure>
+                                    </div>
+                                <button onclick="closeVideo()" class="modal-close is-large" aria-label="close"></button>
+                            </div>
+                            <button class="button mt-4" onclick="openVideo()">Attachment: Video</button>
+                            `:''}
+                        </div>
+                        <div class="column content">
+                            ${test.screenshotPath ? `
+                            <div id="testImage" class="modal">
+                                <div class="modal-background"></div>
+                                <div class="modal-content">
+                                    <p class="image">
+                                        <img src="${test.base64Image ? test.screenshotPath : `file://${test.screenshotPath}`}" alt="Screenshot">
+                                    </p>
+                                </div>
+                                <button onclick="closeModal()" class="modal-close is-large" aria-label="close"></button>
+                            </div>
+                            <figure class="image box">
+                                <img onclick="openModal()" src="${test.base64Image ? test.screenshotPath : `file://${test.screenshotPath}`}" alt="Screenshot">
+                            </figure>` : ''}
+                        </div>
+                    </div>
+                    <div class="content">
+                        ${test.steps.length > 0 ? `
+                        <details id="stepopen">
+                            <summary><h4 class="title is-4">Steps</h4></summary>
+                            <span id="stepDetails" class="content"></span>
+                        </details>
+                        `: ``}
+                    </div class="content">
+                    <div>
+                        ${test.errors.length ? `
+                        <h4 class="title is-4">Errors</h4>
+                        <div class="content">
+                            <pre><code class="data-lang=js">${escapeHtml(test.errors.join('\n'))}</code></pre>
+                        </div>` : ''}
+                    </div>
+                    <div>
+                        ${test.logs ? `
+                        <h4 class="title is-4">Logs</h4>
+                        <div class="box">
+                            <pre>${escapeHtml(test.logs)}</pre>
+                        </div>` : ''}
+                    </div>
+                `;
+
+                const stepDetailsDiv = document.getElementById('stepDetails');
+                if(stepDetailsDiv){
+                    const stepsList = attachSteps(test);
+                    const detail = document.getElementById("stepopen");
+                    if(test.errors.length > 0){
+                        detail.setAttribute("open", "");
+                    }
+                    stepDetailsDiv.appendChild(stepsList);
+                }
+            }
+
+            function attachSteps(test) {
+                const stepsList = document.createElement("ul");
+                stepsList.setAttribute("id", "steps");
+                stepsList.innerHTML = '';
+                test.steps.forEach(step => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<strong class="${step.snippet ? 'has-text-danger' : ''}">${step.title}</strong>`;
+                    if (step.snippet) {
+                        const pre = document.createElement('pre');
+                        const code = document.createElement('code');
+                        const locationText = step.location ? `\n\nat: ${step.location}` : '';
+                        code.textContent = `${step.snippet}${locationText}`;
+                        code.setAttribute('data-lang', 'js');
+                        pre.appendChild(code);
+                        li.appendChild(pre);
+                    }
+                    stepsList.appendChild(li);
+                });
+                return stepsList;
+            }
+            function openModal() {
+                let modal = document.querySelector("#testImage");
+                modal.classList.add("is-active");
+            }
+            function openVideo(){
+                let modal = document.querySelector("#testVideo");
+                modal.classList.add("is-active");
+            }
+            function closeVideo(){
+                let modal = document.querySelector("#testVideo");
+                modal.classList.remove("is-active");
+            }
+            function closeModal() {
+                let modal = document.querySelector("#testImage");
+                modal.classList.remove("is-active");
+            }
+            window.openModal = openModal;
+            window.openVideo = openVideo;
+            window.closeVideo = closeVideo;
+            window.closeModal = closeModal;
+            
+            document.addEventListener('keydown', (event) => {
+            if (event.key === "Escape") {
+                closeModal();
+            }});
+
+            function attachEventListeners() {
+                const checkboxes = document.querySelectorAll('#select-filter input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', applyFilters);
+                });
+                const testItems = document.querySelectorAll('[data-test-id]');
+                testItems.forEach(item => {
+                    item.addEventListener('click', () => {
+                        testItems.forEach(i => i.classList.remove('listselected'));
+                        item.classList.add('listselected');
+                        const testId = item.getAttribute('data-test-id');
+                        const test = testData[testId];
+                        displayTestDetails(test);
+                    });
+                });
+                const filters = document.querySelectorAll('.filter');
+                filters.forEach(filter => {
+                    filter.addEventListener('click', () => {
+                        const status = filter.getAttribute('data-status');
+                        filters.forEach(f => {
+                            if (f.getAttribute('data-status')) {
+                                f.classList.remove('active');
+                            }
+                        });
+                        filter.classList.add('active');
+                        applyFilters();
+                    });
+                });
+            }
+
+            function applyFilters() {
+                const selectedCheckboxes = document.querySelectorAll('#select-filter input[type="checkbox"]:checked');
+                const activeFilter = document.querySelector('.filter.active');
+                const selectedStatus = activeFilter ? activeFilter.getAttribute('data-status') : 'all';
+                const selectedProjects = [];
+                const selectedTags = [];
+                selectedCheckboxes.forEach(checkbox => {
+                    if (checkbox.getAttribute('data-filter-type') === 'project') {
+                        selectedProjects.push(checkbox.value.trim());
+                    } else {
+                        selectedTags.push(checkbox.value.trim());
+                    }
+                });
+                const detailsElements = document.querySelectorAll('.sidebar details');
+                detailsElements.forEach(details => {
+                    let shouldShowDetails = false;
+                    const items = details.querySelectorAll('li[data-test-id]');
+                    items.forEach(item => {
+                        const testTags = item.getAttribute('data-test-tags').trim().split(' ').filter(Boolean);
+                        const projectName = item.getAttribute('data-project-name').trim();
+                        const testStatus = item.getAttribute('data-test-status').trim();
+                        const matchesProject = selectedProjects.length === 0 || selectedProjects.includes(projectName);
+                        const matchesTags = selectedTags.length === 0 || selectedTags.every(tag => testTags.includes(tag));
+                        const matchesStatus = (selectedStatus === 'all' && testStatus !== 'skipped') ||
+                            (selectedStatus !== 'all' && (
+                                testStatus.includes(selectedStatus) ||
+                                (selectedStatus === 'failed' && (testStatus === 'failed' || testStatus === 'timedOut')) ||
+                                (selectedStatus === 'retry' && testStatus.includes('retry')) ||
+                                (selectedStatus === 'flaky' && testStatus.includes('flaky'))
+                            ));
+                        if (matchesProject && matchesTags && matchesStatus) {
+                            item.classList.remove('is-hidden');
+                            shouldShowDetails = true;
+                        } else {
+                            item.classList.add('is-hidden');
+                        }
+                    });
+                    details.open = shouldShowDetails;
+                    details.classList.toggle('is-hidden', !shouldShowDetails);
+                });
+                updateSelectedFiltersDisplay(selectedProjects, selectedTags, selectedStatus);
+            }
+            
+            function updateSelectedFiltersDisplay(projects, tags, status) {
+                const filtersDisplay = document.getElementById('selected-filters');
+                filtersDisplay.innerHTML = '';
+
+                if (projects.length > 0) {
+                    filtersDisplay.innerHTML += `<span> Projects: ${projects.join(', ')}</span>`;
+                }
+                if (tags.length > 0) {
+                    filtersDisplay.innerHTML += `<span> Tags: ${tags.join(', ')}</span>`;
+                }
+                if (status !== 'all') {
+                    filtersDisplay.innerHTML += `<span> Status: ${status}</span>`;
+                }
+
+                if (filtersDisplay.innerHTML === '') {
+                    filtersDisplay.innerHTML = '<span>All Tests</span>';
+                }
+            }
+            const searchInput = document.querySelector('input[name="search"]');
+            const detailsElements = document.querySelectorAll('details');
+            function filterTests(search){
+                const searchTerm = search.toLowerCase();
+                const testItems = document.querySelectorAll('[data-test-id]');
+
+                if (searchTerm) {
+                    detailsElements.forEach(detail => {
+                        detail.open = false; // Collapse all details initially
+                    });
+
+                    testItems.forEach(item => {
+                        const testTitle = item.textContent.toLowerCase();
+                        if (testTitle.includes(searchTerm)) {
+                            item.style.display = 'block'; // Show matching test item
+
+                            let parent = item.parentElement;
+                            while (parent && parent.tagName !== 'ASIDE') {
+                                if (parent.tagName === 'DETAILS') {
+                                    parent.open = true;
+                                }
+                                parent = parent.parentElement;
+                            }
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                } else {
+                    testItems.forEach(item => {
+                        item.style.display = 'block';
+                    });
+                    detailsElements.forEach(detail => {
+                        detail.open = false;
+                    });
+                }
+            }
+            function debounce(func, wait) {
+                let timeout;
+                return function(...args) {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(this, args), wait);
+                };
+            }
+            
+            const debouncedSearch = debounce((event) => {
+                filterTests(event.target.value);
+            }, 300);
+
+            searchInput.addEventListener('input', debouncedSearch);
+
+            const ctx = document.getElementById('testChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Passed', 'Failed', 'Skipped','Flaky'],
+                    datasets: [{
+                        data: [0, 0, 0, 0],
+                        backgroundColor: ['#28a745', '#ff6685', '#66d1ff', '#ffb70f']
+                        }]
+                    },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                           display: false
+                        }
+                    }
+                }
+            });
+
+            attachEventListeners();
+        });
+    </script>
+</body>
+</html>

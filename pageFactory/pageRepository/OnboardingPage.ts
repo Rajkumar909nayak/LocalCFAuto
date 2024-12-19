@@ -807,6 +807,25 @@ export class OnboardingPage {
       },
     );
     this.messageID = response.data.msgs[0].id;
+    console.log("Message ID", this.messageID)
+  }
+
+  async fetchOTP() {
+    const response = await axios.get(
+      `https://api.mailinator.com/v2/domains/igsteam704160.testinator.com/inboxes/${testData.inboxName}/messages/${this.messageID}/?token=${testData.tokenKey}`,
+      {
+        headers: {
+          "accept": "application/json",
+        },
+      },
+    );
+    //this.messageID = response.data.subject;
+    console.log("Subject", response.data.subject)
+    let sub = response.data.subject;
+    const parts = sub.split(' ');
+    const otp = parts[parts.length - 1];
+    console.log('otp', otp);
+    return otp;
   }
 
   async fetchMagicLink() {

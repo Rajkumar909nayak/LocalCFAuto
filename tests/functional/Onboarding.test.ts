@@ -65,7 +65,7 @@ test.describe('ClearFeed Onboarding Tests', () => {
     },
   );
 
-  test.only(
+  test(
     'Verify Onboarding Page with Magic Link Using Customer Support and Standalone helpdesk without selecting Glove support opt',
     { tag: '@Smoke' },
     async ({ newWorkspacePage, onboardingPage }) => {
@@ -94,12 +94,14 @@ test.describe('ClearFeed Onboarding Tests', () => {
     },
   );
 
-  test(
+  test.only(
     'Verify Onboarding Page with Magic Link Using Employee Support and Standalone helpdesk without selecting Glove support opt',
     { tag: '@Smoke' },
     async ({ newWorkspacePage, onboardingPage }) => {
       test.setTimeout(390000); // Set timeout to 390000 seconds for this test
       await test.step('Navigate to existing Slack workspace', async () => {
+        await onboardingPage.fechMessageId();
+        await onboardingPage.fetchOTP();
         await newWorkspacePage.loginToSlack();
       });
       await test.step('Navigate to ClearFeed application Using Magic link', async () => {
