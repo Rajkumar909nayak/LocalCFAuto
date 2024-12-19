@@ -1,5 +1,5 @@
 {
-  "userEmail": "raj@igsteam704160.testinator.com",
+  "userEmail": "igs@igsteam704160.testinator.com",
   "slackURL": "https://clearfeedui-igs.slack.com",
   "existingUserEmail": "testcf620@gmail.com",
   "password": "U2FsdGVkX1907TXVYNea6tWNCN4QEiP61R65QVEq/TQ=",
@@ -39,6 +39,6 @@
   "requestChannelImage": 2,
   "secureFromDayOneImageForAccountSetUpPage": 2,
   "secureFromDayOneImageForAuthorizeSlacPage": 1,
-  "inboxName": "raj",
+  "inboxName": "igs",
   "tokenKey": "3f6682d8fa374934bc1e9709d8feac03"
 }

@@ -16,7 +16,6 @@ let inboxId: string;
 
 export class WebActions {
   private messageID: string;
-  private magicLink: string;
   readonly page: Page;
   readonly context: BrowserContext;
 
@@ -124,7 +123,6 @@ export class WebActions {
       },
     );
     this.messageID = response.data.msgs[0].id;
-    console.log("Message ID", this.messageID)
   }
 
   async fetchOTP() {
@@ -136,16 +134,14 @@ export class WebActions {
         },
       },
     );
-    //this.messageID = response.data.subject;
-    console.log("Subject", response.data.subject)
-    let sub = response.data.subject;
-    const parts = sub.split(' ');
+    let subject = response.data.subject;
+    const parts = subject.split(' ');
     const otp = parts[parts.length - 1];
-    console.log('otp', otp);
     return otp;
   }
 
   async fetchMagicLink() {
+    await this.fechMessageId();
     const response = await axios.get(
       `https://api.mailinator.com/v2/domains/igsteam704160.testinator.com/inboxes/${testData.inboxName}/messages/${this.messageID}/links/?token=${testData.tokenKey}`,
       {
@@ -154,6 +150,7 @@ export class WebActions {
         },
       },
     );
-    this.magicLink = response.data.links[0];
+    const magicLink = response.data.links[0];
+    return magicLink
   }
 }

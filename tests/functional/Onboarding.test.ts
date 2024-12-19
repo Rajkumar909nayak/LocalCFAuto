@@ -100,8 +100,6 @@ test.describe('ClearFeed Onboarding Tests', () => {
     async ({ newWorkspacePage, onboardingPage }) => {
       test.setTimeout(390000); // Set timeout to 390000 seconds for this test
       await test.step('Navigate to existing Slack workspace', async () => {
-        await onboardingPage.fechMessageId();
-        await onboardingPage.fetchOTP();
         await newWorkspacePage.loginToSlack();
       });
       await test.step('Navigate to ClearFeed application Using Magic link', async () => {

@@ -51,10 +51,10 @@ export class OnboardingPage {
       .locator('//span[contains(text(),"Send login link to email")]')
       .click();
     await onBoardingPage.locator('//div[@class="mt-2"]//span').isVisible();
-    await this.fechMessageId();
-    await this.fetchMagicLink();
+    //await webActions.fechMessageId();
+    // await webActions.fetchMagicLink();
     const magicLinkPage = await this.context.newPage();
-    await magicLinkPage.goto(this.magicLink);
+    await magicLinkPage.goto(await webActions.fetchMagicLink());
     // await webActions.deleteInbox();
     await magicLinkPage.waitForLoadState();
     await magicLinkPage.close();
@@ -797,48 +797,48 @@ export class OnboardingPage {
 
   }
 
-  async fechMessageId() {
-    const response = await axios.get(
-      `https://api.mailinator.com/v2/domains/igsteam704160.testinator.com/inboxes/${testData.inboxName}/?token=${testData.tokenKey}`,
-      {
-        headers: {
-          "accept": "application/json",
-        },
-      },
-    );
-    this.messageID = response.data.msgs[0].id;
-    console.log("Message ID", this.messageID)
-  }
+  // async fechMessageId() {
+  //   const response = await axios.get(
+  //     `https://api.mailinator.com/v2/domains/igsteam704160.testinator.com/inboxes/${testData.inboxName}/?token=${testData.tokenKey}`,
+  //     {
+  //       headers: {
+  //         "accept": "application/json",
+  //       },
+  //     },
+  //   );
+  //   this.messageID = response.data.msgs[0].id;
+  //   console.log("Message ID", this.messageID)
+  // }
 
-  async fetchOTP() {
-    const response = await axios.get(
-      `https://api.mailinator.com/v2/domains/igsteam704160.testinator.com/inboxes/${testData.inboxName}/messages/${this.messageID}/?token=${testData.tokenKey}`,
-      {
-        headers: {
-          "accept": "application/json",
-        },
-      },
-    );
-    //this.messageID = response.data.subject;
-    console.log("Subject", response.data.subject)
-    let sub = response.data.subject;
-    const parts = sub.split(' ');
-    const otp = parts[parts.length - 1];
-    console.log('otp', otp);
-    return otp;
-  }
+  // async fetchOTP() {
+  //   const response = await axios.get(
+  //     `https://api.mailinator.com/v2/domains/igsteam704160.testinator.com/inboxes/${testData.inboxName}/messages/${this.messageID}/?token=${testData.tokenKey}`,
+  //     {
+  //       headers: {
+  //         "accept": "application/json",
+  //       },
+  //     },
+  //   );
+  //   //this.messageID = response.data.subject;
+  //   console.log("Subject", response.data.subject)
+  //   let sub = response.data.subject;
+  //   const parts = sub.split(' ');
+  //   const otp = parts[parts.length - 1];
+  //   console.log('otp', otp);
+  //   return otp;
+  // }
 
-  async fetchMagicLink() {
-    const response = await axios.get(
-      `https://api.mailinator.com/v2/domains/igsteam704160.testinator.com/inboxes/${testData.inboxName}/messages/${this.messageID}/links/?token=${testData.tokenKey}`,
-      {
-        headers: {
-          "accept": "application/json",
-        },
-      },
-    );
-    this.magicLink = response.data.links[0];
-  }
+  // async fetchMagicLink() {
+  //   const response = await axios.get(
+  //     `https://api.mailinator.com/v2/domains/igsteam704160.testinator.com/inboxes/${testData.inboxName}/messages/${this.messageID}/links/?token=${testData.tokenKey}`,
+  //     {
+  //       headers: {
+  //         "accept": "application/json",
+  //       },
+  //     },
+  //   );
+  //   this.magicLink = response.data.links[0];
+  // }
 
   /**
    * Method for delete account id
