@@ -2,17 +2,16 @@ import { randomInt } from 'crypto';
 
 import { BrowserContext } from '@playwright/test';
 import type { Page } from '@playwright/test';
-import * as cheerio from 'cheerio';
-import CryptoJS from 'crypto-js';
-import MailSlurp from 'mailslurp-client';
 import axios from 'axios';
+import CryptoJS from 'crypto-js';
 
 import qaTestData from '../Environment_variables/staging/onBoardingTestData.json';
 
 const testData = qaTestData;
 
-let mailslurp: MailSlurp;
-let inboxId: string;
+const MAILINATOR_HEADERS = {
+  accept: 'application/json',
+};
 
 export class WebActions {
   private messageID: string;
@@ -75,82 +74,60 @@ export class WebActions {
   }
 
   /**
-   * Method to create Mailslurp inbox
+   * Method to build Mailinator API URL
+   * @param endpoint - The API endpoint
+   * @returns string - The complete API URL
    */
-  async createMailslurpInbox() {
-    mailslurp = new MailSlurp({ apiKey: testData.apiKey });
-    const customEmail = testData.userEmail;
-    const createdinbox = await mailslurp.createInbox(customEmail);
-    inboxId = createdinbox.id;
+  private buildMailinatorUrl(endpoint: string): string {
+    const { mailinatorBaseURL, domainName, inboxName, tokenKey } = qaTestData;
+
+    if (!mailinatorBaseURL || !domainName || !inboxName || !tokenKey) {
+      throw new Error('Missing required Mailinator configuration');
+    }
+
+    return `${mailinatorBaseURL}/v2/domains/${domainName}/inboxes/${inboxName}${endpoint}?token=${tokenKey}`;
   }
 
   /**
-   * Method to extract link from inbox
-   * @returns
+   * Method to extract message id
    */
-  async extractLink() {
-    const inbox = await mailslurp.waitForLatestEmail(inboxId, 10000);
-    const loc = cheerio.load(inbox.body);
-    const link = loc('a').attr('href');
-    return link;
-  }
-
-  /**
-   * Method to delete inbox
-   */
-  async deleteInbox() {
-    await mailslurp.deleteInbox(inboxId);
+  async fetchMessageId() {
+    const response = await axios.get(this.buildMailinatorUrl('/'), {
+      headers: MAILINATOR_HEADERS,
+    });
+    this.messageID = response.data.msgs[0].id;
   }
 
   /**
    * Mathod to extract OTP
    * @returns
    */
-  async extractOTP() {
-    const inbox = await mailslurp.waitForLatestEmail(inboxId, 10000);
-    const parts = inbox.subject.split(' ');
-    const otp = parts[parts.length - 1];
-    return otp;
-  }
-
-  async fechMessageId() {
-    const response = await axios.get(
-      `https://api.mailinator.com/v2/domains/igsteam704160.testinator.com/inboxes/${testData.inboxName}/?token=${testData.tokenKey}`,
-      {
-        headers: {
-          "accept": "application/json",
-        },
-      },
-    );
-    this.messageID = response.data.msgs[0].id;
-  }
-
   async fetchOTP() {
     const response = await axios.get(
-      `https://api.mailinator.com/v2/domains/igsteam704160.testinator.com/inboxes/${testData.inboxName}/messages/${this.messageID}/?token=${testData.tokenKey}`,
+      this.buildMailinatorUrl(`/messages/${this.messageID}/`),
       {
-        headers: {
-          "accept": "application/json",
-        },
+        headers: MAILINATOR_HEADERS,
       },
     );
-    let subject = response.data.subject;
+    const subject = response.data.subject;
     const parts = subject.split(' ');
     const otp = parts[parts.length - 1];
     return otp;
   }
 
+  /**
+   * Method to extract link from inbox
+   * @returns
+   */
   async fetchMagicLink() {
-    await this.fechMessageId();
+    await this.fetchMessageId();
     const response = await axios.get(
-      `https://api.mailinator.com/v2/domains/igsteam704160.testinator.com/inboxes/${testData.inboxName}/messages/${this.messageID}/links/?token=${testData.tokenKey}`,
+      this.buildMailinatorUrl(`/messages/${this.messageID}/links/`),
       {
-        headers: {
-          "accept": "application/json",
-        },
+        headers: MAILINATOR_HEADERS,
       },
     );
     const magicLink = response.data.links[0];
-    return magicLink
+    return magicLink;
   }
 }

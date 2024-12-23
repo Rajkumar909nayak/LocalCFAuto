@@ -50,7 +50,7 @@ test.describe('ClearFeed Onboarding E2E Tests', () => {
     'Verify Created Channel,Request,Workflow and Collection Settings Using Customer Support and Standalone helpdesk',
     { tag: '@Smoke' },
     async ({ newWorkspacePage, onboardingPage }) => {
-      test.setTimeout(840000); // Set timeout to 780000 seconds for this test
+      test.setTimeout(780000); // Set timeout to 780000 seconds for this test
       await test.step('Navigate to existing Slack workspace', async () => {
         await newWorkspacePage.loginToSlack();
       });
@@ -66,28 +66,6 @@ test.describe('ClearFeed Onboarding E2E Tests', () => {
           testData.requestChannelInSettingAsCustomer,
         );
       });
-      // await test.step('Creation of CF ticket from slack through Automatic ticketing', async () => {
-      //   await onboardingPage.verifyTicketSectionConfiguration(CFPage, 10);
-      //   await onboardingPage.navigateBack(CFPage);
-      //   await newWorkspacePage.enterMessageInCreatedRequestChannel();
-      //   await newWorkspacePage.verifyCommentsFromWebAppToSlack();
-      //   await newWorkspacePage.againNavigateToCF();
-      //   await onboardingPage.verifyCommentsFromSlckToWebApp(CFPage);
-      //   // await onboardingPage.verifyTicketSectionConfiguration(CFPage, 1);
-      //   // await onboardingPage.navigateBack(CFPage);
-      //   // await newWorkspacePage.enterMessageInCreatedRequestChannel();
-      //   // await newWorkspacePage.createTicketThroughEmoji();
-      //   // await newWorkspacePage.againNavigateToCF();
-      //   // await onboardingPage.verifyCommentsFromSlckToWebApp(CFPage);
-      // });
-      // await test.step('Creation of CF ticket from slack through Emoji', async () => {
-      //   await onboardingPage.verifyTicketSectionConfiguration(CFPage, 9);
-      //   await onboardingPage.navigateBack(CFPage);
-      //   await newWorkspacePage.enterMessageInCreatedRequestChannel();
-      //   await newWorkspacePage.createTicketThroughEmoji();
-      //   await newWorkspacePage.againNavigateToCF();
-      //   await onboardingPage.verifyCommentsFromSlckToWebApp(CFPage);
-      // });
     },
   );
 
@@ -95,7 +73,7 @@ test.describe('ClearFeed Onboarding E2E Tests', () => {
     'Verify Created Channel,Workflow and Collection Settings Using Employee Support and Standalone helpdesk',
     { tag: '@Smoke' },
     async ({ newWorkspacePage, onboardingPage }) => {
-      test.setTimeout(840000); // Set timeout to 780000 seconds for this test
+      test.setTimeout(780000); // Set timeout to 780000 seconds for this test
       await test.step('Navigate to existing Slack workspace', async () => {
         await newWorkspacePage.loginToSlack();
       });

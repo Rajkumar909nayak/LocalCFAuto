@@ -10,12 +10,9 @@ const envurl = testConfig.stageApi;
 
 let webActions: WebActions;
 const testData = qaTestData;
-export let requestChannelName: string;
 
 export class OnboardingPage {
-  // private requestChannelName: string;
-  private messageID: string;
-  private magicLink: string;
+  private requestChannelName: string;
   readonly page: Page;
   readonly context: BrowserContext;
 
@@ -51,11 +48,8 @@ export class OnboardingPage {
       .locator('//span[contains(text(),"Send login link to email")]')
       .click();
     await onBoardingPage.locator('//div[@class="mt-2"]//span').isVisible();
-    //await webActions.fechMessageId();
-    // await webActions.fetchMagicLink();
     const magicLinkPage = await this.context.newPage();
     await magicLinkPage.goto(await webActions.fetchMagicLink());
-    // await webActions.deleteInbox();
     await magicLinkPage.waitForLoadState();
     await magicLinkPage.close();
   }
@@ -409,7 +403,7 @@ export class OnboardingPage {
     await onBoardingPage
       .locator('//input[@id="requestChannelName"]')
       .fill('igs' + (await webActions.getCryptoRandomNumber(1, 100)));
-    requestChannelName = await onBoardingPage
+    this.requestChannelName = await onBoardingPage
       .locator('//input[@id="requestChannelName"]')
       .getAttribute('value');
     await onBoardingPage.locator('//span[contains(text(),"Continue")]').click();
@@ -508,7 +502,7 @@ export class OnboardingPage {
     const actRequestedChannelname = await onBoardingPage
       .locator('//span[@class="break-word"]')
       .textContent();
-    expect(actRequestedChannelname).toContain(requestChannelName);
+    expect(actRequestedChannelname).toContain(this.requestChannelName);
 
     await onBoardingPage.waitForLoadState('load');
     await onBoardingPage.locator('//span[text()="Inbox"]').isVisible();
@@ -573,7 +567,7 @@ export class OnboardingPage {
     const actRequestedChannelname = await onBoardingPage
       .locator('//span[@class="break-word"]')
       .textContent();
-    expect(actRequestedChannelname).toContain(requestChannelName);
+    expect(actRequestedChannelname).toContain(this.requestChannelName);
   }
 
   /**
@@ -622,7 +616,7 @@ export class OnboardingPage {
         '(//table[@style="table-layout: auto;"]//tbody//tr//td)[1]//span//span',
       )
       .textContent();
-    expect(actRequestedChannelname).toContain(requestChannelName);
+    expect(actRequestedChannelname).toContain(this.requestChannelName);
     await onBoardingPage
       .locator('(//span[@class="ant-collapse-header-text"])[3]')
       .click();
@@ -729,7 +723,7 @@ export class OnboardingPage {
   }
 
   /**
-   * Method to verify workflow successfull message
+   * ethod to verify workflow successfull message
    * @param onBoardingPage
    */
   async verifyWorkflowSuccessfullMessage(onBoardingPage: Page) {
@@ -748,97 +742,6 @@ export class OnboardingPage {
       )
       .isVisible();
   }
-
-  /**
-   * Method to verify ticket section configuration
-   * @param onBoardingPage 
-   * @param index 
-   */
-  async verifyTicketSectionConfiguration(onBoardingPage: Page, index: number) {
-    await onBoardingPage.locator('//div[@title="Settings"]').click();
-    await onBoardingPage.locator('(//span[@class="ant-collapse-header-text"])[7]').click();
-    // await onBoardingPage.waitForTimeout(2000);
-    //if (await onBoardingPage.locator('//span[@class="ant-switch-inner-checked"]').isChecked()) {
-    // await onBoardingPage.locator('//span[@class="ant-switch-inner"]').isEnabled();
-    //}
-    //else if (!await onBoardingPage.locator('//span[@class="ant-switch-inner-unchecked"]').isChecked()) {
-    if (await onBoardingPage.locator('(//span[@class="ant-switch-inner"])[7]').isVisible()) {
-      await onBoardingPage.locator('(//span[@class="ant-switch-inner"])[7]').click();
-    }
-    //(//span[@class="ant-switch-inner"])[7]
-    //}
-    await onBoardingPage.locator('(//div[@class="ant-select-selector"])[4]').click();
-    await onBoardingPage.locator('//div[contains(text(),"ClearFeed")]').click();
-    await onBoardingPage.locator(`(//input[@class="ant-radio-input"])[${index}]`).click();
-    await onBoardingPage.locator('(//input[@class="ant-radio-input"])[11]').click();
-    await onBoardingPage.locator('(//button[@type="submit"])[7]').click();
-    await onBoardingPage.locator('//div[@title="Requests"]').click();
-  }
-
-  /**
-   * Method to verify comments from slack to web and reply the comments in web app
-   * @param onBoardingPage 
-   */
-  async verifyCommentsFromSlckToWebApp(onBoardingPage: Page) {
-    await onBoardingPage.reload();
-    await onBoardingPage.locator('((//div[@class="ant-table-tbody-virtual-holder-inner"]//div)[1]//span)[1]').click();
-    await onBoardingPage.locator('//div[@class="story_messageContent__Tugw2"]//p').last().isVisible();
-    if (await onBoardingPage.locator('//div[@class="ql-editor ql-blank"]//p').isVisible()) {
-      await onBoardingPage.locator('//div[@class="ql-editor ql-blank"]//p').isVisible();
-      await onBoardingPage.locator('//div[@class="ql-editor ql-blank"]//p').fill('Done');
-      await onBoardingPage.locator('((//div[@class="py-2 px-2 d-flex justify-end gap-2"])[2]//button)[2]//span').click();
-      await onBoardingPage.locator('(//span[contains(text(),"Send")])[3]').click();
-      // await page2.waitForTimeout(3000);
-    }
-    // else {
-    //   console.log("Not visible");
-    // }
-    await onBoardingPage.locator('//button[@class="ant-btn ant-btn-default px-2 story_drawerCloseButton__cEe_Q"]').click();
-
-  }
-
-  // async fechMessageId() {
-  //   const response = await axios.get(
-  //     `https://api.mailinator.com/v2/domains/igsteam704160.testinator.com/inboxes/${testData.inboxName}/?token=${testData.tokenKey}`,
-  //     {
-  //       headers: {
-  //         "accept": "application/json",
-  //       },
-  //     },
-  //   );
-  //   this.messageID = response.data.msgs[0].id;
-  //   console.log("Message ID", this.messageID)
-  // }
-
-  // async fetchOTP() {
-  //   const response = await axios.get(
-  //     `https://api.mailinator.com/v2/domains/igsteam704160.testinator.com/inboxes/${testData.inboxName}/messages/${this.messageID}/?token=${testData.tokenKey}`,
-  //     {
-  //       headers: {
-  //         "accept": "application/json",
-  //       },
-  //     },
-  //   );
-  //   //this.messageID = response.data.subject;
-  //   console.log("Subject", response.data.subject)
-  //   let sub = response.data.subject;
-  //   const parts = sub.split(' ');
-  //   const otp = parts[parts.length - 1];
-  //   console.log('otp', otp);
-  //   return otp;
-  // }
-
-  // async fetchMagicLink() {
-  //   const response = await axios.get(
-  //     `https://api.mailinator.com/v2/domains/igsteam704160.testinator.com/inboxes/${testData.inboxName}/messages/${this.messageID}/links/?token=${testData.tokenKey}`,
-  //     {
-  //       headers: {
-  //         "accept": "application/json",
-  //       },
-  //     },
-  //   );
-  //   this.magicLink = response.data.links[0];
-  // }
 
   /**
    * Method for delete account id
