@@ -231,16 +231,16 @@ export class OnboardingPage {
       .locator('//h2[contains(text(),"Install ClearFeed App")]')
       .isVisible();
     await onBoardingPage
-      .locator('//label[@class="ant-radio-button-wrapper px-6 py-7"]')
+      .locator('(//span[@class="ant-typography"])[1]')
       .isVisible();
     await onBoardingPage
       .locator(
-        '//label[@class="ant-radio-button-wrapper ant-radio-button-wrapper-checked px-6 py-7"]',
+        '//label[contains(@class,"ant-radio-button-wrapper ant-radio-button-wrapper-checked px-6 py-7")]',
       )
       .click();
     await onBoardingPage
       .locator(
-        '(//*[contains(text(),"Don\'t have permission to add apps to Slack ? ")])[1]',
+        `(//*[contains(text(),"Don't have permission to add apps to Slack?")])[1]`,
       )
       .isVisible();
     await onBoardingPage
