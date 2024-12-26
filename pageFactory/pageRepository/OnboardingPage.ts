@@ -613,7 +613,7 @@ export class OnboardingPage {
       .click();
     const actRequestedChannelname = await onBoardingPage
       .locator(
-        '(//table[@style="table-layout: auto;"]//tbody//tr//td)[1]//span//span',
+        '((//div[@class="ant-table-row"]//div)[1]//span)[2]',
       )
       .textContent();
     expect(actRequestedChannelname).toContain(this.requestChannelName);
