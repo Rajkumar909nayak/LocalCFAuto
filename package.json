@@ -9,7 +9,7 @@
   "scripts": {
     "test": "npx playwright test",
     "test:single": "cross-env ENV=$npm_config_ENV npx playwright test Onboarding.test.ts --project=Chromium",
-    "test:parallel": "cross-env ENV=$npm_config_ENV npx playwright test --grep @Smoke --project=Edge",
+    "test:parallel": "cross-env ENV=$npm_config_ENV npx playwright test --grep @Smoke --project=Chromium",
     "test:serial": "cross-env ENV=$npm_config_ENV npx playwright test --grep @Smoke --workers=1 --project=Chromium",
     "test:record": "npx playwright codegen",
     "allureReport": "allure serve"
