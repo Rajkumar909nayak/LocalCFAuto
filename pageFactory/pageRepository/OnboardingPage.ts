@@ -532,9 +532,19 @@ export class OnboardingPage {
       .locator('//label[contains(text(),"Request Channel")]')
       .isVisible();
     await onBoardingPage.locator('//input[@id="topic_id"]').click();
-    await onBoardingPage
-      .locator('(//div[@class="ant-select-item-option-content"]//div)[2]')
-      .click();
+   if (await onBoardingPage
+      .locator('(//div[@class="ant-select-item-option-content"]//div)[2]').isVisible()) {
+      await onBoardingPage
+        .locator('(//div[@class="ant-select-item-option-content"]//div)[2]')
+        .click();
+    }
+
+    else if (await onBoardingPage
+      .locator('(//div[@class="ant-select-item-option-content"]//div)[1]').isVisible()) {
+      await onBoardingPage
+        .locator('(//div[@class="ant-select-item-option-content"]//div)[1]')
+        .click();
+    }
     await this.clickOnCloseIcon(
       onBoardingPage,
       testData.dashboardPopupCloseIconAsCustomer,
