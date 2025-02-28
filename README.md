@@ -1,5 +1,9 @@
 <!-- TABLE OF CONTENTS -->
 
+npx cross-env ENV=stage npm run test:serial
+npm run test:single --ENV="stage"
+npm run allureReport
+
 <h2>
     <details open="open">
         <summary class="normal">Table of Contents</summary>
