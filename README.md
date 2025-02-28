@@ -4,6 +4,10 @@ npx cross-env ENV=stage npm run test:serial
 npm run test:single --ENV="stage"
 npm run allureReport
 
+//ENCRYPT
+        // const cipher = CryptoJS.AES.encrypt('Welcome@123',key);
+        // console.log(cipher.toString()); 
+
 <h2>
     <details open="open">
         <summary class="normal">Table of Contents</summary>
